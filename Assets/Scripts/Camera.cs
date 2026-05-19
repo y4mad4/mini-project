@@ -2,15 +2,18 @@
 
 public class CameraController : MonoBehaviour
 {
-    public Transform target;       // 카메라가 따라갈 대상 (강아지 플레이어)
-    public Vector3 offset = new Vector3(0f, 0f, -10f); // 카메라와 플레이어 간의 거리 (Z축 중요!)
+    [Header("추적할 대상")]
+    public Transform target;
 
-    void LateUpdate()
+    [Header("카메라 오프셋 (거리)")]
+    // X는 무조건 0, Y와 Z만 앵글을 위해 10, -10으로 고정합니다.
+    public Vector3 offset = new Vector3(0f, 10f, -10f);
+
+    private void LateUpdate()
     {
-        // 플레이어가 배정되지 않았다면 실행하지 않음
         if (target == null) return;
 
-
+        // 중간 계산(Lerp) 없이 플레이어 위치 + 오프셋 좌표로 카메라를 매 프레임 즉시 순간이동 시킵니다.
         transform.position = target.position + offset;
     }
 }
