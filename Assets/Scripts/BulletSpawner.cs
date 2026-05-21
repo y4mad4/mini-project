@@ -23,7 +23,11 @@ public class BulletSpawner : MonoBehaviour
         _isSpawning = false;
     }
 
-
+    public void SetData(float speed, float interval)
+    {
+        bulletSpeed = speed;
+        spawnInterval = interval;
+    }
 
     private void Update()
     {

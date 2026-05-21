@@ -2,34 +2,38 @@
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class Enemy : MonoBehaviour
+public class BulletIncounter : MonoBehaviour
 {
-    [SerializeField] private float maxHp = 100f;
+    [SerializeField] private int enemyId = 1; // 인스펙터에서 적 id 지정
     [SerializeField] private BulletSpawner bulletSpawner;
-    [SerializeField] private float timeForDamage = 20f;
-    [SerializeField] private Slider hpBar;
+    [SerializeField] private Slider EnemyHpBar;
 
+    private BulletData _data;
     private float _currentHp;
     private bool _isPlayerInRange;
     private bool _isInBattle;
+    private float _damageTimer;
     private GameObject _battleCanvas;
-    float _damageTimer;
+
+
 
     private void Start()
     {
-        _currentHp = maxHp;
+        // 데이터 로드
+        _data = BulletDataManager.Instance.GetBulletData(enemyId);
+        _currentHp = _data.maxHp;
+        EnemyHpBar.maxValue = _data.maxHp;
+        EnemyHpBar.value = _currentHp;
+        // 탄막 속도, 간격 적용
+        bulletSpawner.SetData(_data.bulletSpeed, _data.bulletSpawnInterval);
+
         _battleCanvas = GameObject.Find("BattleCanvas");
         if (_battleCanvas != null)
             _battleCanvas.SetActive(false);
-    }
 
-    private void Awake()
-    {
-        _currentHp = maxHp;
-        hpBar.value = _currentHp;
-        hpBar.maxValue = maxHp;
-       
-    }
+         
+}
+
 
 
     private void OnTriggerEnter(Collider other)
@@ -49,40 +53,33 @@ public class Enemy : MonoBehaviour
         if (_isPlayerInRange && !_isInBattle && Keyboard.current.zKey.wasPressedThisFrame)
             StartBattle();
 
-
-        _damageTimer += Time.deltaTime;
-
         if (_isInBattle)
         {
             _damageTimer += Time.deltaTime;
-
-            if (_damageTimer >= 1)
+            if (_damageTimer >= 1f)
             {
-                _damageTimer -= 1;
-                TakeDamage(timeForDamage);
+                _damageTimer -= 1f;
+   
+                TakeDamage(_data.damagePerSecond);
             }
         }
-
     }
-
-    private void StartBattle()
-    {
-        _isInBattle = true;
-        _battleCanvas.SetActive(true);
-        bulletSpawner.StartSpawning();
-    }
-
     public void TakeDamage(float damage)
     {
         _currentHp -= damage;
-        _currentHp = Mathf.Clamp(_currentHp, 0f, maxHp);
-
-        hpBar.value = _currentHp;
+        _currentHp = Mathf.Clamp(_currentHp, 0f, _data.maxHp);
+        EnemyHpBar.value = _currentHp;
 
         Debug.Log("적 HP: " + _currentHp);
 
         if (_currentHp <= 0f)
             EndBattle();
+    }
+    private void StartBattle()
+    {
+        _isInBattle = true;
+        _battleCanvas.SetActive(true);
+        bulletSpawner.StartSpawning();
     }
 
     private void EndBattle()

@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "1",
+    "Name": "dummy1",
+    "maxHp": "100",
+    "damagePerSecond": "10",
+    "bulletSpeed": "200",
+    "bulletSpawnInterval": "1"
+  },
+  {
+    "Id": "2",
+    "Name": "dummy2",
+    "maxHp": "200",
+    "damagePerSecond": "20",
+    "bulletSpeed": "300",
+    "bulletSpawnInterval": "1"
+  },
+  {
+    "Id": "3",
+    "Name": "dummy3",
+    "maxHp": "300",
+    "damagePerSecond": "30",
+    "bulletSpeed": "400",
+    "bulletSpawnInterval": "1"
+  }
+]
