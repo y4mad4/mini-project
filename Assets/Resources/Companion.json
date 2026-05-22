@@ -1,10 +1,32 @@
 [
   {
-    "2": "3",
-    "동료2": "동료3",
-    "120": "100",
-    "30": "50",
-    "15": "10",
-    "8": "5"
+    "Id": "companion_01",
+    "Name": "동료1",
+    "Hp": 80.0,
+    "Mp": 40.0,
+    "Attack": 25.0,
+    "Defense": 8.0,
+    "Speed": 15.0,
+    "SkillId": "skill_01"
+  },
+  {
+    "Id": "companion_02",
+    "Name": "동료2",
+    "Hp": 120.0,
+    "Mp": 30.0,
+    "Attack": 15.0,
+    "Defense": 15.0,
+    "Speed": 8.0,
+    "SkillId": "skill_02"
+  },
+  {
+    "Id": "companion_03",
+    "Name": "동료3",
+    "Hp": 100.0,
+    "Mp": 50.0,
+    "Attack": 20.0,
+    "Defense": 10.0,
+    "Speed": 5.0,
+    "SkillId": "skill_03"
   }
 ]

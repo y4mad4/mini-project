@@ -1,9 +1,23 @@
 [
   {
-    "2": "3",
-    "에테르": "폭탄",
-    "Mp": "Damage",
-    "30": "80",
-    "MP 30 회복": "적에게 80 데미지"
+    "Id": "item_potion_01",
+    "Name": "포션",
+    "Effect": "Hp",
+    "Value": 50.0,
+    "Description": "HP 50 회복"
+  },
+  {
+    "Id": "item_ether_01",
+    "Name": "에테르",
+    "Effect": "Mp",
+    "Value": 30.0,
+    "Description": "MP 30 회복"
+  },
+  {
+    "Id": "item_bomb_01",
+    "Name": "폭탄",
+    "Effect": "Damage",
+    "Value": 80.0,
+    "Description": "적에게 80 데미지"
   }
 ]

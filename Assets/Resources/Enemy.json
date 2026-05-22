@@ -1,10 +1,26 @@
 [
   {
-    "2": "3",
-    "dummy2": "dummy3",
-    "200": "300",
-    "20": "25",
-    "10": "15",
-    "8": "6"
+    "Id": "enemy_01",
+    "Name": "dummy1",
+    "Hp": 100.0,
+    "Attack": 15.0,
+    "Defense": 5.0,
+    "Speed": 10.0
+  },
+  {
+    "Id": "enemy_02",
+    "Name": "dummy2",
+    "Hp": 200.0,
+    "Attack": 20.0,
+    "Defense": 10.0,
+    "Speed": 8.0
+  },
+  {
+    "Id": "enemy_03",
+    "Name": "dummy3",
+    "Hp": 300.0,
+    "Attack": 25.0,
+    "Defense": 15.0,
+    "Speed": 6.0
   }
 ]
