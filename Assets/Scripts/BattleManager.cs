@@ -68,6 +68,12 @@ public class BattleManager : MonoBehaviour
         }
         _currentEnemy = new EnemyUnit(enemyData);
         _enemies.Add(_currentEnemy);
+        // 이미지 로드
+        battleUI.SetEnemyImage(enemyData.Id);
+        battleUI.SetPartyImages(playerData.Id,
+            DataManager.Instance.GetCompanion("companion_01").Id,
+            DataManager.Instance.GetCompanion("companion_02").Id,
+            DataManager.Instance.GetCompanion("companion_03").Id);
 
         // 턴 순서 정렬
         _turnOrder.AddRange(_players);

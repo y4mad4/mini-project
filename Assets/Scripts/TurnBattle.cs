@@ -27,6 +27,12 @@ public class TurnBattleUI : MonoBehaviour
     [SerializeField] private DamageText damageTextPrefab; // 아까 만든 프리팹을 넣을 곳
     [SerializeField] private Transform damageCanvas; // 데미지 텍스트가 생성될 부모 캔버스
 
+    [Header("캐릭터 이미지")]
+    [SerializeField] private Image enemyImage;
+    [SerializeField] private Image playerImage;
+    [SerializeField] private Image companion1Image;
+    [SerializeField] private Image companion2Image;
+    [SerializeField] private Image companion3Image;
     private void Start()
     {
         attackButton.onClick.AddListener(() => BattleManager.Instance.OnAction("attack"));
@@ -65,6 +71,28 @@ public class TurnBattleUI : MonoBehaviour
                 partySlots[i].SetActive(false); // 슬롯 숨기기
             }
         }
+    }
+
+    public void SetEnemyImage(string id)
+    {
+        Sprite sprite = Resources.Load<Sprite>("Sprites/Enemy/" + id);
+        if (sprite != null)
+            enemyImage.sprite = sprite;
+    }
+
+    public void SetPartyImages(string playerId, string c1Id, string c2Id, string c3Id)
+    {
+        SetImage(playerImage, "Sprites/Player/" + playerId);
+        SetImage(companion1Image, "Sprites/Companion/" + c1Id);
+        SetImage(companion2Image, "Sprites/Companion/" + c2Id);
+        SetImage(companion3Image, "Sprites/Companion/" + c3Id);
+    }
+
+    private void SetImage(Image image, string path)
+    {
+        Sprite sprite = Resources.Load<Sprite>(path);
+        if (sprite != null)
+            image.sprite = sprite;
     }
 
     public void SpawnDamageText(float damage, bool isEnemy, int partyIndex = 0)
