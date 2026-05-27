@@ -17,22 +17,23 @@ public class TurnBattleUI : MonoBehaviour
     [Header("적 정보")]
     [SerializeField] private TextMeshProUGUI enemyNameText; // 적 이름 텍스트 추가!
     [SerializeField] private Slider enemyHpBar;
+    [SerializeField] private Image enemyImage;
 
     [Header("파티 정보 (1~4번 슬롯)")]
     [SerializeField] private GameObject[] partySlots; // 파티원이 없으면 UI를 통째로 끄기 위한 배열
     [SerializeField] private TextMeshProUGUI[] partyNameTexts; // 파티원 이름 텍스트 배열
     [SerializeField] private Slider[] partyHpBars; // 파티원 체력바 배열
+    [SerializeField] private Slider[] partyMpBars;
+    [SerializeField] private Image[] partyImages;
+
 
     [Header("데미지 텍스트")]
     [SerializeField] private DamageText damageTextPrefab; // 아까 만든 프리팹을 넣을 곳
     [SerializeField] private Transform damageCanvas; // 데미지 텍스트가 생성될 부모 캔버스
 
-    [Header("캐릭터 이미지")]
-    [SerializeField] private Image enemyImage;
-    [SerializeField] private Image playerImage;
-    [SerializeField] private Image companion1Image;
-    [SerializeField] private Image companion2Image;
-    [SerializeField] private Image companion3Image;
+    [Header("액션 버튼 텍스트")]
+    [SerializeField] private TextMeshProUGUI[] actionButtonTexts;
+
     private void Start()
     {
         attackButton.onClick.AddListener(() => BattleManager.Instance.OnAction("attack"));
@@ -52,6 +53,14 @@ public class TurnBattleUI : MonoBehaviour
         enemyNameText.text = name;
         enemyHpBar.maxValue = max;
         enemyHpBar.value = current;
+
+     }
+
+    public void SetEnemyImage(string id)
+    {
+        Sprite sprite = Resources.Load<Sprite>("Sprites/Enemy/" + id);
+        if (sprite != null)
+            enemyImage.sprite = sprite;
     }
 
     // 파티 리스트를 넘겨받아 있는 명수만큼만 UI를 켜고 이름을 세팅하는 함수
@@ -65,6 +74,12 @@ public class TurnBattleUI : MonoBehaviour
                 partyNameTexts[i].text = players[i].Name; // 이름 적용
                 partyHpBars[i].maxValue = players[i].MaxHp; // 최대 체력 적용
                 partyHpBars[i].value = players[i].CurrentHp; // 현재 체력 적용
+                partyMpBars[i].maxValue = players[i].MaxMp;
+                partyMpBars[i].value = players[i].CurrentMp;
+
+                Sprite sprite = Resources.Load<Sprite>("Sprites/Companion/" + players[i].Id);
+                if (sprite != null)
+                    partyImages[i].sprite = sprite;
             }
             else // 파티원이 비어있는 슬롯 (예: 파티가 3명뿐일 때 4번째 슬롯)
             {
@@ -73,27 +88,9 @@ public class TurnBattleUI : MonoBehaviour
         }
     }
 
-    public void SetEnemyImage(string id)
-    {
-        Sprite sprite = Resources.Load<Sprite>("Sprites/Enemy/" + id);
-        if (sprite != null)
-            enemyImage.sprite = sprite;
-    }
 
-    public void SetPartyImages(string playerId, string c1Id, string c2Id, string c3Id)
-    {
-        SetImage(playerImage, "Sprites/Player/" + playerId);
-        SetImage(companion1Image, "Sprites/Companion/" + c1Id);
-        SetImage(companion2Image, "Sprites/Companion/" + c2Id);
-        SetImage(companion3Image, "Sprites/Companion/" + c3Id);
-    }
 
-    private void SetImage(Image image, string path)
-    {
-        Sprite sprite = Resources.Load<Sprite>(path);
-        if (sprite != null)
-            image.sprite = sprite;
-    }
+
 
     public void SpawnDamageText(float damage, bool isEnemy, int partyIndex = 0)
     {
@@ -115,7 +112,45 @@ public class TurnBattleUI : MonoBehaviour
         // 3. 데미지 수치 전달하여 애니메이션 시작!
         dmgText.Setup(damage);
     }
+    public void ShowDefaultActions()
+    {
+        actionButtonTexts[0].text = "공격";
+        actionButtonTexts[1].text = "스킬";
+        actionButtonTexts[2].text = "아이템";
+        actionButtonTexts[3].text = "도망";
 
+        attackButton.onClick.RemoveAllListeners();
+        skillButton.onClick.RemoveAllListeners();
+        itemButton.onClick.RemoveAllListeners();
+        fleeButton.onClick.RemoveAllListeners();
+
+        attackButton.onClick.AddListener(() => BattleManager.Instance.OnAction("attack"));
+        skillButton.onClick.AddListener(() => BattleManager.Instance.OnAction("skill"));
+        itemButton.onClick.AddListener(() => BattleManager.Instance.OnAction("item"));
+        fleeButton.onClick.AddListener(() => BattleManager.Instance.OnAction("flee"));
+    }
+
+    public void ShowSkillActions(List<SkillData> skills)
+    {
+        Button[] buttons = { attackButton, skillButton, itemButton, fleeButton };
+
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            buttons[i].onClick.RemoveAllListeners();
+
+            if (i < skills.Count)
+            {
+                int index = i;
+                actionButtonTexts[i].text = skills[i].Name;
+                buttons[i].onClick.AddListener(() => BattleManager.Instance.UseSkill(skills[index]));
+            }
+            else
+            {
+                actionButtonTexts[i].text = "뒤로";
+                buttons[i].onClick.AddListener(() => ShowDefaultActions());
+            }
+        }
+    }
     public void SetActionPanel(bool active)
     {
         attackButton.interactable = active;

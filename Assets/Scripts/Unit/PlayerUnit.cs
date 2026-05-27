@@ -3,6 +3,7 @@
     public int SkillId;
 
     public PlayerUnit(PlayerData data) : base(
+        data.Id,
         data.Name,
         data.Hp,
         data.Mp,

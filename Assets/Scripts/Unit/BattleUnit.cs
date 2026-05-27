@@ -2,6 +2,7 @@
 
 public class BattleUnit
 {
+    public string Id;
     public string Name;
     public float MaxHp;
     public float CurrentHp;
@@ -12,8 +13,9 @@ public class BattleUnit
     public float Speed;
     public bool IsAlive => CurrentHp > 0;
 
-    public BattleUnit(string name, float hp, float mp, float attack, float defense, float speed)
+    public BattleUnit(string id, string name, float hp, float mp, float attack, float defense, float speed)
     {
+        Id = id;
         Name = name;
         MaxHp = hp;
         CurrentHp = hp;
@@ -24,13 +26,14 @@ public class BattleUnit
         Speed = speed;
     }
 
-    public void TakeDamage(float damage)
+    public float TakeDamage(float damage)
     {
+        Debug.Log($"{Name} Defense: {Defense}");
         float final = Mathf.Max(0, damage - Defense);
         CurrentHp = Mathf.Clamp(CurrentHp - final, 0, MaxHp);
         Debug.Log($"{Name} 이 {final} 데미지를 받았습니다. 남은 HP: {CurrentHp}");
+        return final;
     }
-
     public void Heal(float amount)
     {
         CurrentHp = Mathf.Clamp(CurrentHp + amount, 0, MaxHp);

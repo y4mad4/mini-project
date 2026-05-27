@@ -17,6 +17,8 @@ public class BattleManager : MonoBehaviour
     private BattleUnit _currentUnit;
     private EnemyUnit _currentEnemy;
 
+    public bool IsInBattle { get; private set; } // 배틀시 이동방지
+
 
 
     private void Awake()
@@ -31,33 +33,50 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        // 플레이어/동료 한 번만 생성
+        PlayerData playerData = DataManager.Instance.GetPlayer("player_01");
+        if (playerData != null)
+            _players.Add(new PlayerUnit(playerData));
+
+        for (int i = 1; i <= 3; i++)
+        {
+            CompanionData companionData = DataManager.Instance.GetCompanion($"companion_0{i}");
+            if (companionData == null) continue;
+            _players.Add(new CompanionUnit(companionData));
+        }
+    }
+
     public void StartBattle(string enemyId)
     {
-       
+        _enemies.Clear();
+        _turnOrder.Clear();
+        IsInBattle = true;
 
         // 캔버스가 확실히 확인되었으니 켜기
         _turnBattleCanvas.SetActive(true);
 
         // 1. 플레이어 생성 (방어 코드 추가)
-        PlayerData playerData = DataManager.Instance.GetPlayer("player_01");
-        if (playerData != null)
-        {
-            _players.Add(new PlayerUnit(playerData));
-        }
-        else
-        {
-            Debug.LogError("플레이어 데이터를 찾을 수 없습니다!");
-            return; // 플레이어가 없으면 전투 진행 불가
-        }
+        //PlayerData playerData = DataManager.Instance.GetPlayer("player_01");
+        //if (playerData != null)
+        //{
+        //    _players.Add(new PlayerUnit(playerData));
+        //}
+        //else
+        //{
+        //    Debug.LogError("플레이어 데이터를 찾을 수 없습니다!");
+        //    return; // 플레이어가 없으면 전투 진행 불가
+        //}
 
-        // 2. 동료 생성 (★ 빈 데이터 무시하기 적용)
-        for (int i = 1; i <= 3; i++)
-        {
-            CompanionData companionData = DataManager.Instance.GetCompanion($"companion_0{i}");
-            if (companionData == null) continue; // 데이터가 없으면 뻗지 말고 다음 번호로!
+        //// 2. 동료 생성 (★ 빈 데이터 무시하기 적용)
+        //for (int i = 1; i <= 3; i++)
+        //{
+        //    CompanionData companionData = DataManager.Instance.GetCompanion($"companion_0{i}");
+        //    if (companionData == null) continue; // 데이터가 없으면 뻗지 말고 다음 번호로!
 
-            _players.Add(new CompanionUnit(companionData));
-        }
+        //    _players.Add(new CompanionUnit(companionData));
+        //}
 
         // 3. 적 생성
         EnemyData enemyData = DataManager.Instance.GetEnemy(enemyId);
@@ -68,13 +87,7 @@ public class BattleManager : MonoBehaviour
         }
         _currentEnemy = new EnemyUnit(enemyData);
         _enemies.Add(_currentEnemy);
-        // 이미지 로드
-        battleUI.SetEnemyImage(enemyData.Id);
-        battleUI.SetPartyImages(playerData.Id,
-            DataManager.Instance.GetCompanion("companion_01").Id,
-            DataManager.Instance.GetCompanion("companion_02").Id,
-            DataManager.Instance.GetCompanion("companion_03").Id);
-
+      
         // 턴 순서 정렬
         _turnOrder.AddRange(_players);
         _turnOrder.AddRange(_enemies);
@@ -84,14 +97,10 @@ public class BattleManager : MonoBehaviour
             return b.Speed.CompareTo(a.Speed);
         });
 
-        // 4. UI 초기화 (★ 주의 요망 구역)
-        // 수정 전
-        // battleUI.SetEnemyHp(_currentEnemy.CurrentHp, _currentEnemy.MaxHp);
-        // if (_players.Count == 4) { battleUI.SetPartyHp(_players[0], ...); }
-
-        // 수정 후
-        // 4. UI 초기화
+     
+        // UI 초기화
         battleUI.SetEnemyUI(_currentEnemy.Name, _currentEnemy.CurrentHp, _currentEnemy.MaxHp);
+        battleUI.SetEnemyImage(_currentEnemy.Id);
         battleUI.SetPartyUI(_players); // 리스트를 통째로 던져줌!
 
         _currentTurnIndex = 0;
@@ -131,16 +140,16 @@ public class BattleManager : MonoBehaviour
         if (alive.Count > 0)
         {
             BattleUnit target = alive[Random.Range(0, alive.Count)];
-            float damage = _currentEnemy.Attack; // 공격력 저장
+            
 
-            target.TakeDamage(damage);
+            float final = target.TakeDamage(_currentEnemy.Attack);
 
             // ★ 추가: 적이 공격했을 때 아군 머리 위로 숫자 띄우기
             int targetIndex = _players.IndexOf(target); // 아군 리스트 중 몇 번째인지 찾기
-            battleUI.SpawnDamageText(damage, false, targetIndex); // false는 적이 아님(아군)을 의미
+            battleUI.SpawnDamageText(final, false, targetIndex); // false는 적이 아님(아군)을 의미
 
             battleUI.SetPartyUI(_players);
-            battleUI.SetTurnText($"{target.Name}이(가) {damage}의 피해를 입었다!");
+            battleUI.SetTurnText($"{target.Name}이(가) {final}의 피해를 입었다!");
         }
 
         // 2. 아군이 맞아서 체력이 깎인 모습을 확인할 수 있도록 1초 더 기다림
@@ -152,38 +161,108 @@ public class BattleManager : MonoBehaviour
 
     public void OnAction(string action)
     {
-        battleUI.SetActionPanel(false);
-
+       
         switch (action)
         {
             case "attack":
-                // 1. 데미지 계산
-                float damage = _currentUnit.Attack;
+                float finalDamage = _currentEnemy.TakeDamage(_currentUnit.Attack);
 
-                // 2. 적에게 데미지 적용
-                _currentEnemy.TakeDamage(damage);
-
-                // 3. 적 체력바 UI 갱신
                 battleUI.SetEnemyUI(_currentEnemy.Name, _currentEnemy.CurrentHp, _currentEnemy.MaxHp);
 
-                // 4. ★ 핵심: 데미지 텍스트 띄우기 (적을 때렸으니 isEnemy는 true!)
-                battleUI.SpawnDamageText(damage, true);
+                battleUI.SpawnDamageText(finalDamage, true);
 
-                // 5. 로그 출력
-                battleUI.SetTurnText($"{_currentUnit.Name}의 공격! {damage}의 데미지!");
-                Debug.Log($"{_currentUnit.Name} 이 적을 공격!");
+                battleUI.SetTurnText($"{_currentUnit.Name}의 공격! {finalDamage}의 데미지!");
+
+                battleUI.SetActionPanel(false);
+
                 break;
             case "skill":
-                Debug.Log("스킬!");
-                break;
+                // 현재 유닛의 스킬 목록 가져오기
+                List<SkillData> skills = new List<SkillData>();
+
+                if (_currentUnit is PlayerUnit playerUnit)
+                {
+                    // 플레이어는 모든 스킬 사용 가능 (나중에 장착 시스템으로 변경)
+                    skills.Add(DataManager.Instance.GetSkill("skill_01"));
+                    skills.Add(DataManager.Instance.GetSkill("skill_02"));
+                    skills.Add(DataManager.Instance.GetSkill("skill_03"));
+                }
+                else if (_currentUnit is CompanionUnit companionUnit)
+                {
+                    // 동료는 본인 스킬만 사용
+                    skills.Add(DataManager.Instance.GetSkill(companionUnit.SkillId));
+                }
+
+                battleUI.ShowSkillActions(skills);
+                return; // EndTurn 호출 안 함!
+
             case "item":
                 Debug.Log("아이템!");
+                battleUI.SetActionPanel(false);
                 break;
+
             case "flee":
-                Debug.Log("도망!");
+                // 도망 성공률 계산
+                float playerSpeed = _currentUnit.Speed;
+                float enemySpeed = _currentEnemy.Speed;
+
+                // 기본 성공률 50%, 속도 차이에 따라 가중치 적용
+                float fleeChance = 0.5f + (playerSpeed - enemySpeed) * 0.05f;
+                fleeChance = Mathf.Clamp(fleeChance, 0.1f, 0.9f); // 최소 10%, 최대 90%
+
+                if (Random.value < fleeChance)
+                {
+                    // 도망 성공
+                    battleUI.SetTurnText("도망쳤다!");
+                    _turnBattleCanvas.SetActive(false);
+                    IsInBattle = false;
+                    return; // EndTurn 호출 안 함
+                }
+                else
+                {
+                    // 도망 실패
+                    battleUI.SetTurnText("도망에 실패했다!");
+                    battleUI.SetActionPanel(false);
+                }
                 break;
         }
 
+        EndTurn();
+    }
+
+    public void UseSkill(SkillData skill)
+    {
+        // MP 체크
+        if (_currentUnit.CurrentMp < skill.MpCost)
+        {
+            Debug.Log("MP가 부족합니다!");
+            battleUI.ShowDefaultActions();
+            return;
+        }
+
+        // MP 소모
+        _currentUnit.UseMp(skill.MpCost);
+
+        switch (skill.Type)
+        {
+            case "Damage":
+
+                float finalDamage = _currentEnemy.TakeDamage(skill.Damage);
+                battleUI.SetEnemyUI(_currentEnemy.Name, _currentEnemy.CurrentHp, _currentEnemy.MaxHp);
+                battleUI.SpawnDamageText(finalDamage, true);
+                battleUI.SetTurnText($"{_currentUnit.Name}의 공격! {finalDamage}의 데미지!");
+                battleUI.SetActionPanel(false);
+                break;
+
+            case "Heal":
+                _currentUnit.Heal(skill.Damage);
+                battleUI.SetPartyUI(_players);
+                battleUI.SetTurnText($"{_currentUnit.Name}의 {skill.Name}! {skill.Damage} 회복!");
+                break;
+        }
+
+        battleUI.SetPartyUI(_players);
+        battleUI.ShowDefaultActions();
         EndTurn();
     }
 
@@ -203,14 +282,17 @@ public class BattleManager : MonoBehaviour
         {
             _turnBattleCanvas.SetActive(false);
             Debug.Log("승리!");
+            IsInBattle = false;
             return true;
         }
         if (allPlayersDead)
         {
             _turnBattleCanvas.SetActive(false);
             Debug.Log("패배!");
+            IsInBattle = false;
             return true;
         }
         return false;
     }
+
 }

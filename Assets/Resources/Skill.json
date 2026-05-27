@@ -2,6 +2,7 @@
   {
     "Id": "skill_01",
     "Name": "파이어볼",
+    "Type": "Damage",
     "Damage": 50.0,
     "MpCost": 10.0,
     "Description": "강력한 화염 공격"
@@ -9,13 +10,15 @@
   {
     "Id": "skill_02",
     "Name": "힐",
-    "Damage": -50.0,
+    "Type": "Heal",
+    "Damage": 50.0,
     "MpCost": 10.0,
     "Description": "아군 HP 회복"
   },
   {
     "Id": "skill_03",
     "Name": "슬래시",
+    "Type": "Damage",
     "Damage": 40.0,
     "MpCost": 5.0,
     "Description": "빠른 베기"

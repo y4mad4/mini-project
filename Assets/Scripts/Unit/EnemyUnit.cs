@@ -1,8 +1,7 @@
 ﻿public class EnemyUnit : BattleUnit
 {
-    public string Id;
-
-    public EnemyUnit(EnemyData data) : base(
+      public EnemyUnit(EnemyData data) : base(
+        data.Id,
         data.Name,
         data.Hp,
         0,

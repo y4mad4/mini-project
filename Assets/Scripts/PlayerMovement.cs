@@ -46,9 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        // 🚨 FixedUpdate(1초에 50번 실행) 안에서 GameObject.Find를 쓰면 게임이 뚝뚝 끊깁니다.
-        // 미리 찾아둔 변수로 체크해야 합니다.
-        if (_battleCanvas != null && _battleCanvas.activeSelf)
+        if (BattleManager.Instance != null && BattleManager.Instance.IsInBattle)
             return;
 
         Vector3 camForward = cameraTransform.forward;

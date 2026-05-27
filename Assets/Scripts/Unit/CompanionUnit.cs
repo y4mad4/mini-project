@@ -3,6 +3,7 @@
     public string SkillId;
 
     public CompanionUnit(CompanionData data) : base(
+        data.Id,
         data.Name,
         data.Hp,
         data.Mp,
