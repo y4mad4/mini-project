@@ -1,0 +1,29 @@
+[
+  {
+    "Id": "armor_01",
+    "Name": "가죽 갑옷",
+    "DefenseBonus": 3.0,
+    "MagicDefenseBonus": 2.0,
+    "HpBonus": 10.0,
+    "Grade": "Common",
+    "Description": "가벼운 가죽 갑옷"
+  },
+  {
+    "Id": "armor_02",
+    "Name": "철 갑옷",
+    "DefenseBonus": 8.0,
+    "MagicDefenseBonus": 3.0,
+    "HpBonus": 20.0,
+    "Grade": "Rare",
+    "Description": "무거운 철 갑옷"
+  },
+  {
+    "Id": "armor_03",
+    "Name": "마법 로브",
+    "DefenseBonus": 2.0,
+    "MagicDefenseBonus": 10.0,
+    "HpBonus": 30.0,
+    "Grade": "Rare",
+    "Description": "마력이 깃든 로브"
+  }
+]

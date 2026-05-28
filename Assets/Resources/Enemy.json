@@ -4,23 +4,38 @@
     "Name": "dummy1",
     "Hp": 100.0,
     "Attack": 15.0,
+    "MagicAttack": 10.0,
     "Defense": 5.0,
-    "Speed": 10.0
+    "MagicDefense": 3.0,
+    "Speed": 10.0,
+    "ExpReward": 50,
+    "DropItemId": "item_potion_01",
+    "DropRate": 0.3
   },
   {
     "Id": "enemy_02",
     "Name": "dummy2",
     "Hp": 200.0,
     "Attack": 20.0,
+    "MagicAttack": 15.0,
     "Defense": 10.0,
-    "Speed": 8.0
+    "MagicDefense": 8.0,
+    "Speed": 8.0,
+    "ExpReward": 100,
+    "DropItemId": "item_ether_01",
+    "DropRate": 0.2
   },
   {
     "Id": "enemy_03",
     "Name": "dummy3",
     "Hp": 300.0,
     "Attack": 25.0,
+    "MagicAttack": 20.0,
     "Defense": 15.0,
-    "Speed": 6.0
+    "MagicDefense": 12.0,
+    "Speed": 6.0,
+    "ExpReward": 150,
+    "DropItemId": "item_bomb_01",
+    "DropRate": 0.1
   }
 ]

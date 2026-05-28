@@ -1,0 +1,35 @@
+[
+  {
+    "Id": "accessory_01",
+    "Name": "힘의 반지",
+    "AttackBonus": 3.0,
+    "MagicAttackBonus": 0.0,
+    "DefenseBonus": 0.0,
+    "MagicDefenseBonus": 0.0,
+    "SpeedBonus": 0.0,
+    "Grade": "Common",
+    "Description": "공격력을 높여주는 반지"
+  },
+  {
+    "Id": "accessory_02",
+    "Name": "수호의 목걸이",
+    "AttackBonus": 0.0,
+    "MagicAttackBonus": 0.0,
+    "DefenseBonus": 3.0,
+    "MagicDefenseBonus": 3.0,
+    "SpeedBonus": 0.0,
+    "Grade": "Common",
+    "Description": "방어력을 높여주는 목걸이"
+  },
+  {
+    "Id": "accessory_03",
+    "Name": "바람의 부츠",
+    "AttackBonus": 0.0,
+    "MagicAttackBonus": 0.0,
+    "DefenseBonus": 0.0,
+    "MagicDefenseBonus": 0.0,
+    "SpeedBonus": 5.0,
+    "Grade": "Rare",
+    "Description": "속도를 높여주는 부츠"
+  }
+]

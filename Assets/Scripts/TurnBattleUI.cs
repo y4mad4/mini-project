@@ -92,7 +92,7 @@ public class TurnBattleUI : MonoBehaviour
 
 
 
-    public void SpawnDamageText(float damage, bool isEnemy, int partyIndex = 0)
+    public void SpawnDamageText(float final, bool isEnemy, int partyIndex = 0)
     {
         // 1. 프리팹을 생성해서 캔버스 안에 넣음
         DamageText dmgText = Instantiate(damageTextPrefab, damageCanvas);
@@ -110,7 +110,7 @@ public class TurnBattleUI : MonoBehaviour
         }
 
         // 3. 데미지 수치 전달하여 애니메이션 시작!
-        dmgText.Setup(damage);
+        dmgText.Setup(final);
     }
     public void ShowDefaultActions()
     {

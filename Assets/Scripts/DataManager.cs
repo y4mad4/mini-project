@@ -12,6 +12,9 @@ public class DataManager : MonoBehaviour
     private Dictionary<string, ItemData> _itemDict = new Dictionary<string, ItemData>();
     private Dictionary<string, EnemyData> _enemyDict = new Dictionary<string, EnemyData>();
     private Dictionary<string, BulletData> _bulletDict = new Dictionary<string, BulletData>();
+    private Dictionary<string, WeaponData> _weaponDict = new Dictionary<string, WeaponData>();
+    private Dictionary<string, ArmorData> _armorDict = new Dictionary<string, ArmorData>();
+    private Dictionary<string, AccessoryData> _accessoryDict = new Dictionary<string, AccessoryData>();
 
     private void Awake()
     {
@@ -34,6 +37,9 @@ public class DataManager : MonoBehaviour
         _itemDict = Load<ItemData>("Item");
         _enemyDict = Load<EnemyData>("Enemy");
         _bulletDict = Load<BulletData>("BulletData");
+        _weaponDict = Load<WeaponData>("Weapon");
+        _armorDict = Load<ArmorData>("Armor");
+        _accessoryDict = Load<AccessoryData>("Accessory");
 
         Debug.Log("데이터 로드 완료");
     }
@@ -60,6 +66,9 @@ public class DataManager : MonoBehaviour
     public ItemData GetItem(string id) => GetData(_itemDict, id);
     public EnemyData GetEnemy(string id) => GetData(_enemyDict, id);
     public BulletData GetBullet(string id) => GetData(_bulletDict, id);
+    public WeaponData GetWeapon(string id) => GetData(_weaponDict, id);
+    public ArmorData GetArmor(string id) => GetData(_armorDict, id);
+    public AccessoryData GetAccessory(string id) => GetData(_accessoryDict, id);
 
     private T GetData<T>(Dictionary<string, T> dict, string id)
     {

@@ -1,0 +1,29 @@
+[
+  {
+    "Id": "weapon_01",
+    "Name": "낡은 검",
+    "AttackBonus": 5.0,
+    "MagicAttackBonus": 0.0,
+    "SpeedBonus": 0.0,
+    "Grade": "Common",
+    "Description": "평범한 검"
+  },
+  {
+    "Id": "weapon_02",
+    "Name": "강철 검",
+    "AttackBonus": 10.0,
+    "MagicAttackBonus": 0.0,
+    "SpeedBonus": 2.0,
+    "Grade": "Rare",
+    "Description": "단단한 강철 검"
+  },
+  {
+    "Id": "weapon_03",
+    "Name": "마법 지팡이",
+    "AttackBonus": 0.0,
+    "MagicAttackBonus": 15.0,
+    "SpeedBonus": 0.0,
+    "Grade": "Rare",
+    "Description": "마력이 깃든 지팡이"
+  }
+]

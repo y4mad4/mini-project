@@ -9,11 +9,13 @@ public class BattleUnit
     public float MaxMp;
     public float CurrentMp;
     public float Attack;
+    public float MagicAttack;
     public float Defense;
+    public float MagicDefense;
     public float Speed;
     public bool IsAlive => CurrentHp > 0;
 
-    public BattleUnit(string id, string name, float hp, float mp, float attack, float defense, float speed)
+    public BattleUnit(string id, string name, float hp, float mp, float attack, float magicAttack, float defense, float magicDefense, float speed)
     {
         Id = id;
         Name = name;
@@ -22,22 +24,23 @@ public class BattleUnit
         MaxMp = mp;
         CurrentMp = mp;
         Attack = attack;
+        MagicAttack = magicAttack;
         Defense = defense;
+        MagicDefense = magicDefense;
         Speed = speed;
     }
 
-    public float TakeDamage(float damage)
+    public float TakeDamage(float damage, bool isMagic = false)
     {
-        Debug.Log($"{Name} Defense: {Defense}");
-        float final = Mathf.Max(0, damage - Defense);
+        float def = isMagic ? MagicDefense : Defense;
+        float final = Mathf.Max(1, damage - def);
         CurrentHp = Mathf.Clamp(CurrentHp - final, 0, MaxHp);
-        Debug.Log($"{Name} 이 {final} 데미지를 받았습니다. 남은 HP: {CurrentHp}");
         return final;
     }
+
     public void Heal(float amount)
     {
         CurrentHp = Mathf.Clamp(CurrentHp + amount, 0, MaxHp);
-        Debug.Log($"{Name} 이 {amount} 회복했습니다. 남은 HP: {CurrentHp}");
     }
 
     public void UseMp(float amount)

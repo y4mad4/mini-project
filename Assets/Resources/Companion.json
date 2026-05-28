@@ -5,9 +5,16 @@
     "Hp": 80.0,
     "Mp": 40.0,
     "Attack": 25.0,
+    "MagicAttack": 10.0,
     "Defense": 8.0,
+    "MagicDefense": 5.0,
     "Speed": 15.0,
-    "SkillId": "skill_01"
+    "Level": 1,
+    "Exp": 0,
+    "ExpToNext": 100,
+    "Skill1Id": "skill_01",
+    "Skill2Id": null,
+    "Skill3Id": null
   },
   {
     "Id": "companion_02",
@@ -15,9 +22,16 @@
     "Hp": 120.0,
     "Mp": 30.0,
     "Attack": 15.0,
+    "MagicAttack": 20.0,
     "Defense": 15.0,
+    "MagicDefense": 12.0,
     "Speed": 8.0,
-    "SkillId": "skill_02"
+    "Level": 1,
+    "Exp": 0,
+    "ExpToNext": 100,
+    "Skill1Id": "skill_02",
+    "Skill2Id": null,
+    "Skill3Id": null
   },
   {
     "Id": "companion_03",
@@ -25,8 +39,15 @@
     "Hp": 100.0,
     "Mp": 50.0,
     "Attack": 20.0,
+    "MagicAttack": 25.0,
     "Defense": 10.0,
+    "MagicDefense": 15.0,
     "Speed": 5.0,
-    "SkillId": "skill_03"
+    "Level": 1,
+    "Exp": 0,
+    "ExpToNext": 100,
+    "Skill1Id": "skill_03",
+    "Skill2Id": null,
+    "Skill3Id": null
   }
 ]

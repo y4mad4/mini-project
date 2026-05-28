@@ -17,7 +17,7 @@ public class BattleManager : MonoBehaviour
     private BattleUnit _currentUnit;
     private EnemyUnit _currentEnemy;
 
-    public bool IsInBattle { get; private set; } // 배틀시 이동방지
+    public bool IsInBattle; // 배틀시 이동방지
 
 
 
@@ -165,36 +165,38 @@ public class BattleManager : MonoBehaviour
         switch (action)
         {
             case "attack":
-                float finalDamage = _currentEnemy.TakeDamage(_currentUnit.Attack);
-
+                float damage = _currentUnit.Attack;
+                float finalDamage = _currentEnemy.TakeDamage(damage, false); // 물리 공격
                 battleUI.SetEnemyUI(_currentEnemy.Name, _currentEnemy.CurrentHp, _currentEnemy.MaxHp);
-
                 battleUI.SpawnDamageText(finalDamage, true);
-
                 battleUI.SetTurnText($"{_currentUnit.Name}의 공격! {finalDamage}의 데미지!");
-
                 battleUI.SetActionPanel(false);
-
                 break;
+
             case "skill":
-                // 현재 유닛의 스킬 목록 가져오기
                 List<SkillData> skills = new List<SkillData>();
 
                 if (_currentUnit is PlayerUnit playerUnit)
                 {
-                    // 플레이어는 모든 스킬 사용 가능 (나중에 장착 시스템으로 변경)
-                    skills.Add(DataManager.Instance.GetSkill("skill_01"));
-                    skills.Add(DataManager.Instance.GetSkill("skill_02"));
-                    skills.Add(DataManager.Instance.GetSkill("skill_03"));
+                    if (!string.IsNullOrEmpty(playerUnit.Skill1Id))
+                        skills.Add(DataManager.Instance.GetSkill(playerUnit.Skill1Id));
+                    if (!string.IsNullOrEmpty(playerUnit.Skill2Id))
+                        skills.Add(DataManager.Instance.GetSkill(playerUnit.Skill2Id));
+                    if (!string.IsNullOrEmpty(playerUnit.Skill3Id))
+                        skills.Add(DataManager.Instance.GetSkill(playerUnit.Skill3Id));
                 }
                 else if (_currentUnit is CompanionUnit companionUnit)
                 {
-                    // 동료는 본인 스킬만 사용
-                    skills.Add(DataManager.Instance.GetSkill(companionUnit.SkillId));
+                    if (!string.IsNullOrEmpty(companionUnit.Skill1Id))
+                        skills.Add(DataManager.Instance.GetSkill(companionUnit.Skill1Id));
+                    if (!string.IsNullOrEmpty(companionUnit.Skill2Id))
+                        skills.Add(DataManager.Instance.GetSkill(companionUnit.Skill2Id));
+                    if (!string.IsNullOrEmpty(companionUnit.Skill3Id))
+                        skills.Add(DataManager.Instance.GetSkill(companionUnit.Skill3Id));
                 }
 
                 battleUI.ShowSkillActions(skills);
-                return; // EndTurn 호출 안 함!
+                return;
 
             case "item":
                 Debug.Log("아이템!");
@@ -232,7 +234,6 @@ public class BattleManager : MonoBehaviour
 
     public void UseSkill(SkillData skill)
     {
-        // MP 체크
         if (_currentUnit.CurrentMp < skill.MpCost)
         {
             Debug.Log("MP가 부족합니다!");
@@ -240,18 +241,17 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        // MP 소모
         _currentUnit.UseMp(skill.MpCost);
+        battleUI.SetPartyUI(_players);
 
         switch (skill.Type)
         {
             case "Damage":
-
-                float finalDamage = _currentEnemy.TakeDamage(skill.Damage);
+                bool isMagic = skill.DamageType == "Magic";
+                float finalDamage = _currentEnemy.TakeDamage(skill.Damage, isMagic);
                 battleUI.SetEnemyUI(_currentEnemy.Name, _currentEnemy.CurrentHp, _currentEnemy.MaxHp);
                 battleUI.SpawnDamageText(finalDamage, true);
-                battleUI.SetTurnText($"{_currentUnit.Name}의 공격! {finalDamage}의 데미지!");
-                battleUI.SetActionPanel(false);
+                battleUI.SetTurnText($"{_currentUnit.Name}의 {skill.Name}! {finalDamage}의 데미지!");
                 break;
 
             case "Heal":
@@ -261,7 +261,6 @@ public class BattleManager : MonoBehaviour
                 break;
         }
 
-        battleUI.SetPartyUI(_players);
         battleUI.ShowDefaultActions();
         EndTurn();
     }

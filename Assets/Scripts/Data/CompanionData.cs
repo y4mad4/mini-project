@@ -8,7 +8,14 @@ public class CompanionData
     public float Hp;
     public float Mp;
     public float Attack;
+    public float MagicAttack;
     public float Defense;
+    public float MagicDefense;
     public float Speed;
-    public string SkillId;
+    public int Level;
+    public int Exp;
+    public int ExpToNext;
+    public string Skill1Id;
+    public string Skill2Id;
+    public string Skill3Id;
 }

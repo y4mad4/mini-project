@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class BulletIncounter : MonoBehaviour
 {
+
+   
+
     [SerializeField] private int enemyId = 1; // 인스펙터에서 적 id 지정
     [SerializeField] private BulletSpawner bulletSpawner;
     [SerializeField] private Slider EnemyHpBar;
@@ -11,10 +14,11 @@ public class BulletIncounter : MonoBehaviour
     private BulletData _data;
     private float _currentHp;
     private bool _isPlayerInRange;
-    private bool _isInBattle;
+    
     private float _damageTimer;
     private GameObject _battleCanvas;
 
+    
 
 
     private void Start()
@@ -50,10 +54,10 @@ public class BulletIncounter : MonoBehaviour
 
     private void Update()
     {
-        if (_isPlayerInRange && !_isInBattle && Keyboard.current.zKey.wasPressedThisFrame)
+        if (_isPlayerInRange && !BattleManager.Instance.IsInBattle && Keyboard.current.zKey.wasPressedThisFrame)
             StartBattle();
 
-        if (_isInBattle)
+        if (BattleManager.Instance.IsInBattle)
         {
             _damageTimer += Time.deltaTime;
             if (_damageTimer >= 1f)
@@ -77,14 +81,14 @@ public class BulletIncounter : MonoBehaviour
     }
     private void StartBattle()
     {
-        _isInBattle = true;
+        BattleManager.Instance.IsInBattle = true;
         _battleCanvas.SetActive(true);
         bulletSpawner.StartSpawning();
     }
 
     private void EndBattle()
     {
-        _isInBattle = false;
+        BattleManager.Instance.IsInBattle = false;
         _battleCanvas.SetActive(false);
         bulletSpawner.StopSpawning();
         Destroy(gameObject);
